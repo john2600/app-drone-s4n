@@ -23,6 +23,11 @@ public class Coordinate {
 		return direction;
 	}
 	
+	@Override
+	public String toString() {
+		return "Coordinate [positionX=" + positionX + ", positionY=" + positionY + ", direction=" + direction + "]";
+	}
+
 	public static class Builder{
 		private int x;
 		private int y;

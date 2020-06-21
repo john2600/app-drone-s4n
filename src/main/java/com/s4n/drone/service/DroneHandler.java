@@ -26,20 +26,21 @@ public class DroneHandler {
 	}
 
 	public void handle() throws InterruptedException, ExecutionException {
-		
+
 		for (int i = 0; i < this.drones.size(); i++) {
 			result.add(executorService.submit(this.drones.get(i)));
 		}
 
 		for (int i = 0; i < result.size(); i++) {
 			List<Coordinate> temp = result.get(i).get();
-			Path newFilePath=  FileHandler.createFile(Constants.OUTPUT_FOLDER+ Constants.FILE_OUTPUT + i + ".txt");
+			Path newFilePath = FileHandler.createFile(Constants.OUTPUT_FOLDER + Constants.FILE_OUTPUT + i + ".txt");
+			StringBuffer header = new StringBuffer("=== Reporte de Entregas===").append("\r\n\r\n");
+			FileHandler.fileWriter(newFilePath, header.toString());
 			temp.stream().forEach(x -> {
-				String fileName = x.getPositionX() + " - " + x.getPositionY() + " - " + x.getDirection() + "\n";
-				FileHandler.fileWriter(newFilePath, fileName);
+				StringBuffer sb = new StringBuffer("(").append(x.getPositionX()).append(",").append(x.getPositionY())
+						.append(")").append(" Direccion ").append(x.getDirection()).append("\r\n\r\n");
+				FileHandler.fileWriter(newFilePath, sb.toString());
 			});
-
-			System.out.println("===");
 		}
 		executorService.shutdown();
 	}
