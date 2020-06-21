@@ -22,5 +22,29 @@ public class Coordinate {
 	public char getDirection() {
 		return direction;
 	}
-
+	
+	public static class Builder{
+		private int x;
+		private int y;
+		private char d;
+		
+		public Builder withPositioninX(int x) {
+			this.x=x;
+			return this;
+			
+		}
+		public Builder withPositioninY(int y) {
+			this.y=y;
+			return this;
+		}
+		public Builder withDirection(char d) {
+			this.d=d;
+			return this;
+		}
+		
+		public Coordinate build() {
+			Coordinate coordinate = new Coordinate(this.x, this.y, this.d);
+			return coordinate;
+		}	
+	}
 }
