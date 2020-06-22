@@ -5,24 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import com.s4n.drone.constants.Constants;
 import com.s4n.drone.core.Coordinate;
 import com.s4n.drone.core.Drone;
 import com.s4n.drone.enums.Orientation;
-import com.s4n.drone.service.DroneHandler;
+import com.s4n.drone.service.DroneServiceHandler;
 
 public class DeliveryExecutor {
 	
 	List<Drone> drones = new ArrayList<>();
 	private PrepareDeliveryOrders  prepareDeliveryOrders;
-	private DroneHandler droneHandler;
+	private DroneServiceHandler droneHandler;
 	
-	public DeliveryExecutor(final PrepareDeliveryOrders  prepareDeliveryOrders, final DroneHandler droneHandler) {
+	public DeliveryExecutor(final PrepareDeliveryOrders  prepareDeliveryOrders, final DroneServiceHandler droneHandler) {
 		this.prepareDeliveryOrders = prepareDeliveryOrders;
 		this.droneHandler = droneHandler;
 	}	
 	public void prepareDeliveryDrone(){
 		File[] orders = {}; 
-		orders = this.prepareDeliveryOrders.setDroneOrders();
+		orders = this.prepareDeliveryOrders.getDroneOrders();
 		
 		for (int i = 0; i < orders.length; i++) {			
 			String pathFile = orders[i].getAbsolutePath();
@@ -32,7 +33,7 @@ public class DeliveryExecutor {
 					.withDirection(Orientation.NORTH.getOrientation())
 					.build();
 			
-			Drone drone = new Drone(pathFile, coordinate, 3);
+			Drone drone = new Drone(pathFile, coordinate, 3 , Constants.GRID_LIMIT);
 			drones.add(drone);
 		}
 	}
@@ -45,6 +46,4 @@ public class DeliveryExecutor {
 			e.printStackTrace();
 		}
 	}
-	
-
 }

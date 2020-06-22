@@ -6,6 +6,8 @@ import java.util.Stack;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
+import com.s4n.drone.enums.Orientation;
+import com.s4n.drone.exceptions.DroneException;
 import com.s4n.drone.filehandling.FileHandler;
 
 public class Drone implements Callable<List<Coordinate>> {
@@ -14,50 +16,16 @@ public class Drone implements Callable<List<Coordinate>> {
 	private char direction;
 	private String file;
 	private int deliveryCapacity;
+	private int gridLimit;
 
-	public Drone(String file, Coordinate coordinate, int deliveryCapacity) {
+	public Drone(String file, Coordinate coordinate, int deliveryCapacity, int gridLimit) {
 		this.file = file;
 		this.direction = coordinate.getDirection();
 		this.x = coordinate.getPositionX();
 		this.y = coordinate.getPositionY();
 		this.deliveryCapacity = deliveryCapacity;
+		this.gridLimit = gridLimit;
 	}
-
-	public void moveForward() {
-		if (direction == 'N')
-			y++;
-		else if (direction == 'E')
-			x++;
-		else if (direction == 'S')
-			y--;
-		else
-			x--;
-	}
-
-	public void turnRigth() {
-		if (direction == 'N') {
-			direction = 'E';
-		} else if (direction == 'E') {
-			direction = 'S';
-		} else if (direction == 'S') {
-			direction = 'O';
-		} else {
-			direction = 'N';
-		}
-	}
-
-	public void turnLeft() {
-		if (direction == 'N') {
-			direction = 'O';
-		} else if (direction == 'E') {
-			direction = 'N';
-		} else if (direction == 'S') {
-			direction = 'E';
-		} else {
-			direction = 'S';
-		}
-	}
-
 	@Override
 	public List<Coordinate> call() throws Exception {
 		List<Coordinate> coordinate = new ArrayList<>();
@@ -70,10 +38,10 @@ public class Drone implements Callable<List<Coordinate>> {
 				for (int i = 0; i < line.length(); i++) {
 					char command = line.charAt(i);
 					switch (command) {
-					case 'D': turnRigth(); break;
-					case 'I': turnLeft(); break;
-					default: moveForward();}
-
+						case 'D': turnRigth(); break;
+						case 'I': turnLeft(); break;
+						default: moveForward();
+					}
 					storeDroneLocation.push(new Coordinate.Builder().withPositioninX(x).withPositioninY(y)
 							.withDirection(direction).build());
 				}
@@ -84,5 +52,44 @@ public class Drone implements Callable<List<Coordinate>> {
 
 		return coordinate;
 	}
+
+	public void moveForward() {
+		if(Math.abs(x) == gridLimit || Math.abs(y)==gridLimit) {
+			throw new DroneException("===Error===limite del cuadrante alcanzado");
+		}		
+		if (direction == Orientation.NORTH.getOrientation())
+			y++;
+		else if (direction ==  Orientation.EAST.getOrientation())
+			x++;
+		else if (direction ==  Orientation.SOUTH.getOrientation())
+			y--;
+		else
+			x--;
+	}
+
+	public void turnRigth() {
+		if (direction ==  Orientation.NORTH.getOrientation()) {
+			direction =  Orientation.EAST.getOrientation();
+		} else if (direction ==  Orientation.EAST.getOrientation()) {
+			direction =  Orientation.SOUTH.getOrientation();
+		} else if (direction == Orientation.SOUTH.getOrientation()) {
+			direction = Orientation.WEST.getOrientation();
+		} else {
+			direction =Orientation.NORTH.getOrientation();
+		}
+	}
+
+	public void turnLeft() {
+		if (direction == Orientation.NORTH.getOrientation()) {
+			direction = Orientation.WEST.getOrientation();
+		} else if (direction == Orientation.EAST.getOrientation()) {
+			direction = Orientation.NORTH.getOrientation();
+		} else if (direction == Orientation.SOUTH.getOrientation()) {
+			direction = Orientation.EAST.getOrientation();
+		} else {
+			direction = Orientation.SOUTH.getOrientation();
+		}
+	}
+
 
 }

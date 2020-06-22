@@ -11,7 +11,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 @RunWith(JUnitPlatform.class)
-public class FileHandlerTest implements FileTestProvider {
+public class FileHandlerTest  {
 	private final static String RESOURCE_FILE_NAME = "src/test/resources/sample.txt";
 	private final static String FILE_CONTENT = "ADDDDA";
 

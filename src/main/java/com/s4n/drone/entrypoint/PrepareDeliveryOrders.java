@@ -6,7 +6,7 @@ import com.s4n.drone.constants.Constants;
 
 public class PrepareDeliveryOrders {
 	
-	public File[] setDroneOrders() {
+	public File[] getDroneOrders() {
 		File file = new File(Constants.INPUT_FOLDER);
 		File[] listOfFiles = {};
 		if (!file.isFile()) {
